@@ -556,6 +556,26 @@
       <p style="font-size:12px; color:var(--text-faint); margin-top:14px;">· 기준치: 25년 11월 첫째 주 ~ 26년 1월 마지막 주 (3개월) 평균<br>· 목표치: 내부 선행 데이터 없이 가설 기반으로 설정한 1차 목표</p>
     </div>
   </div>
+ 
+  <!-- 7. 같이 볼 지표 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">같이 볼 지표</span>
+    </div>
+    <div class="chart-wrap">
+      <p class="chart-title">일별 스토리 좋아요 수</p>
+      <div class="legend">
+        <span><span class="dot" style="background:#1a4fd6;"></span>배포 전</span>
+        <span><span class="dot" style="background:#0d7a4e;"></span>배포 후</span>
+      </div>
+      <div style="position:relative; width:100%; height:240px;">
+        <canvas id="likeChart" role="img" aria-label="배포 전 일평균 10k 수준에서 배포 후 35~51k로 급증">좋아요 수 급증 차트</canvas>
+      </div>
+      <p class="chart-note">배포일(4월 21일) 기준 · 배포 전 일평균 약 10k → 배포 후 일평균 약 35~51k (+3~5배)</p>
+    </div>
+  </div>
+ 
   <div class="section">
     <div class="section-header">
       <span class="section-num">참고</span>
@@ -664,6 +684,77 @@ new Chart(document.getElementById('timeChart'), {
     ]
   },
   options: { ...base, scales: { ...base.scales, y: { ...base.scales.y, ticks: { ...base.scales.y.ticks, callback: v => v + '초' } } } }
+});
+ 
+new Chart(document.getElementById('likeChart'), {
+  type: 'line',
+  data: {
+    labels: [
+      '3/1','3/4','3/7','3/10','3/13','3/16','3/19','3/22','3/25','3/28','3/31',
+      '4/3','4/6','4/9','4/12','4/15','4/18','4/21',
+      '4/22','4/24','4/26','4/28','4/30',
+      '5/2','5/4','5/6','5/8','5/10','5/12','5/14','5/16','5/18','5/20','5/22','5/24'
+    ],
+    datasets: [
+      {
+        label: '배포 전',
+        data: [
+          9.5,10.3,10.9,8.1,8.6,8.5,9.5,9.2,8.9,8.7,9.1,
+          9.5,9.0,9.1,8.9,8.8,9.2,null,
+          null,null,null,null,null,
+          null,null,null,null,null,null,null,null,null,null,null,null
+        ],
+        borderColor: '#1a4fd6',
+        backgroundColor: 'rgba(26,79,214,0.07)',
+        borderWidth: 2, pointRadius: 2, pointBackgroundColor: '#1a4fd6',
+        fill: false, tension: 0.3, spanGaps: false
+      },
+      {
+        label: '배포 후',
+        data: [
+          null,null,null,null,null,null,null,null,null,null,null,
+          null,null,null,null,null,null,10.7,
+          14.4,18.4,21.8,24.2,28.9,
+          36.4,34.6,33.4,47.3,29.9,37.8,33.7,51.5,41.1,42.1,42.8,37.0
+        ],
+        borderColor: '#0d7a4e',
+        backgroundColor: 'rgba(13,122,78,0.07)',
+        borderWidth: 2, pointRadius: 2, pointBackgroundColor: '#0d7a4e',
+        fill: false, tension: 0.3, spanGaps: false
+      }
+    ]
+  },
+  options: {
+    ...base,
+    scales: {
+      x: { ticks: { font: { size: 9 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 18 }, grid: { display: false } },
+      y: { ...base.scales.y, min: 0, ticks: { ...base.scales.y.ticks, callback: v => v + 'k' } }
+    },
+    plugins: {
+      ...base.plugins,
+      annotation: {}
+    }
+  },
+  plugins: [{
+    id: 'deployLine',
+    beforeDraw(chart) {
+      const { ctx, chartArea, scales } = chart;
+      if (!chartArea) return;
+      const x = scales.x.getPixelForValue(17);
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, chartArea.top);
+      ctx.lineTo(x, chartArea.bottom);
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4,3]);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.font = '10px sans-serif';
+      ctx.fillText('배포일 4/21', x + 4, chartArea.top + 12);
+      ctx.restore();
+    }
+  }]
 });
 </script>
 </body>
