@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --bg: #f7f6f2;
     --surface: #ffffff;
@@ -27,7 +27,7 @@
     --amber-light: #fdf3e3;
     --accent: #1a4fd6;
   }
-
+ 
   body {
     font-family: 'Noto Sans KR', sans-serif;
     background: var(--bg);
@@ -36,12 +36,12 @@
     line-height: 1.7;
     padding: 48px 24px 80px;
   }
-
+ 
   .container {
     max-width: 900px;
     margin: 0 auto;
   }
-
+ 
   /* Header */
   .doc-header {
     border-bottom: 2px solid var(--text);
@@ -67,7 +67,7 @@
     font-size: 14px;
     color: var(--text-muted);
   }
-
+ 
   /* Summary box */
   .summary-box {
     background: var(--text);
@@ -92,7 +92,7 @@
     color: #fff;
     font-weight: 700;
   }
-
+ 
   /* Section */
   .section {
     margin-bottom: 48px;
@@ -114,7 +114,7 @@
     font-size: 16px;
     font-weight: 700;
   }
-
+ 
   /* Metric cards */
   .metric-grid {
     display: grid;
@@ -148,7 +148,7 @@
   }
   .metric-card .m-change.good { color: var(--green); }
   .metric-card .m-change.info { color: var(--blue); }
-
+ 
   /* Badge */
   .badge {
     display: inline-block;
@@ -161,7 +161,7 @@
   .badge-green { background: var(--green-light); color: var(--green); }
   .badge-amber { background: var(--amber-light); color: var(--amber); }
   .badge-blue { background: var(--blue-light); color: var(--blue); }
-
+ 
   /* Chart wrapper */
   .chart-wrap {
     background: var(--surface);
@@ -188,7 +188,7 @@
     margin-top: 8px;
     line-height: 1.5;
   }
-
+ 
   /* Legend */
   .legend {
     display: flex;
@@ -200,7 +200,7 @@
   }
   .legend span { display: flex; align-items: center; gap: 5px; }
   .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-
+ 
   /* Goal table */
   .goal-table {
     width: 100%;
@@ -224,7 +224,14 @@
   .goal-table tr:last-child td { border-bottom: none; }
   .goal-table .val { font-weight: 700; }
   .goal-table .muted { color: var(--text-muted); }
-
+  .goal-table .asis {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-faint);
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
   /* Exit seq table */
   .seq-table {
     width: 100%;
@@ -251,7 +258,7 @@
   .seq-table tr:last-child td { border-bottom: none; }
   .seq-table .highlight { color: var(--green); font-weight: 700; }
   .seq-table .bold { color: var(--text); font-weight: 700; }
-
+ 
   /* Insight box */
   .insight {
     background: var(--blue-light);
@@ -264,7 +271,7 @@
     margin-top: 12px;
   }
   .insight strong { color: var(--blue); }
-
+ 
   /* Next action */
   .action-list {
     list-style: none;
@@ -289,7 +296,7 @@
     padding-top: 2px;
     flex-shrink: 0;
   }
-
+ 
   /* experiment info */
   .exp-grid {
     display: grid;
@@ -304,7 +311,7 @@
   }
   .exp-item .el { font-size: 11px; color: var(--text-faint); margin-bottom: 4px; }
   .exp-item .ev { font-size: 13px; font-weight: 500; }
-
+ 
   @media (max-width: 640px) {
     .metric-grid { grid-template-columns: 1fr 1fr; }
     .chart-grid-2 { grid-template-columns: 1fr; }
@@ -314,7 +321,7 @@
 </head>
 <body>
 <div class="container">
-
+ 
   <!-- Header -->
   <div class="doc-header">
     <div class="doc-meta">
@@ -325,18 +332,18 @@
     <h1 class="doc-title">스토리 정렬 로직 개편<br>배포 결과 보고</h1>
     <p class="doc-subtitle">배포일 2026-04-21 기준 · 4주 측정 결과</p>
   </div>
-
+ 
   <!-- Summary -->
   <div class="summary-box">
     <p class="label">EXECUTIVE SUMMARY</p>
     <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; padding:0;">
       <li style="display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.92); line-height:1.6;"><span style="color:rgba(255,255,255,0.4); flex-shrink:0;">—</span><span>정렬 방식 <strong>최신순 → 개인화 추천순</strong> 개편 후 4주 측정 결과, 전체 목표 지표 초과 달성</span></li>
-      <li style="display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.92); line-height:1.6;"><span style="color:rgba(255,255,255,0.4); flex-shrink:0;">—</span><span>첫 스토리 이탈률 <strong>44.7%</strong> (목표 47%), 6번째 누적 이탈률 <strong>81.7%</strong> (목표 88%)</span></li>
-      <li style="display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.92); line-height:1.6;"><span style="color:rgba(255,255,255,0.4); flex-shrink:0;">—</span><span>신버전 인당 소비량 AOS <strong>+35%</strong>, iOS <strong>+30%</strong> 증가 · 구버전 동기간 수치 변동 없어 기능 효과로 귀속</span></li>
+      <li style="display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.92); line-height:1.6;"><span style="color:rgba(255,255,255,0.4); flex-shrink:0;">—</span><span>첫 스토리 이탈률 <span style="color:rgba(255,255,255,0.45); font-size:12px; font-family:'DM Mono',monospace;">AS-IS 53.25%</span> → <strong>44.7%</strong> · 6번째 누적 이탈률 <span style="color:rgba(255,255,255,0.45); font-size:12px; font-family:'DM Mono',monospace;">AS-IS 90.85%</span> → <strong>81.7%</strong></span></li>
+      <li style="display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.92); line-height:1.6;"><span style="color:rgba(255,255,255,0.4); flex-shrink:0;">—</span><span>인당 소비량 <span style="color:rgba(255,255,255,0.45); font-size:12px; font-family:'DM Mono',monospace;">AS-IS 13.06개</span> → AOS <strong>23.36개 (+35%)</strong> / iOS <strong>14.71개 (+30%)</strong></span></li>
       <li style="display:flex; gap:10px; font-size:14px; color:rgba(255,255,255,0.92); line-height:1.6;"><span style="color:rgba(255,255,255,0.4); flex-shrink:0;">—</span><span>배포 후 1주 안정화 거쳐 2주차부터 본격 개선 · 현재 안정화 단계</span></li>
     </ul>
   </div>
-
+ 
   <!-- 1. 실험 개요 -->
   <div class="section">
     <div class="section-header">
@@ -352,46 +359,43 @@
       <div class="exp-item"><p class="el">적용 대상</p><p class="ev">3.83.0 이상 업데이트 유저</p></div>
     </div>
   </div>
-
+ 
   <!-- 2. 핵심 지표 -->
   <div class="section">
     <div class="section-header">
       <span class="section-num">02</span>
       <span class="section-title">핵심 지표 요약</span>
     </div>
-    <p style="font-size:12px; color:var(--text-faint); margin-bottom:14px;">※ 목표치는 내부 선행 데이터 없이 가설 기반으로 설정한 1차 목표입니다.</p>
     <div class="metric-grid">
       <div class="metric-card">
         <p class="m-label">첫 번째 스토리 이탈률</p>
+        <p style="font-size:13px; color:var(--text-faint); font-family:'DM Mono',monospace; margin-bottom:2px;">53.25% →</p>
         <p class="m-val green">44.7%</p>
         <p class="m-change good">▼ 6.52%p 감소</p>
-        <p style="font-size:11px; color:var(--text-faint); margin-top:4px;">기준 53.25%</p>
-        <span class="badge badge-green">목표 47% · 초과달성</span>
       </div>
       <div class="metric-card">
         <p class="m-label">6번째 스토리 누적 이탈률</p>
+        <p style="font-size:13px; color:var(--text-faint); font-family:'DM Mono',monospace; margin-bottom:2px;">90.85% →</p>
         <p class="m-val green">81.7%</p>
         <p class="m-change good">▼ 5.07%p 감소</p>
-        <p style="font-size:11px; color:var(--text-faint); margin-top:4px;">기준 90.85%</p>
-        <span class="badge badge-green">목표 88% · 초과달성</span>
       </div>
       <div class="metric-card">
         <p class="m-label">인당 소비 수 (AOS 신버전)</p>
+        <p style="font-size:13px; color:var(--text-faint); font-family:'DM Mono',monospace; margin-bottom:2px;">13.06개 →</p>
         <p class="m-val blue">23.36개</p>
         <p class="m-change info">▲ 35% 증가</p>
-        <p style="font-size:11px; color:var(--text-faint); margin-top:4px;">기준 13.06개</p>
-        <span class="badge badge-green">목표 14개 · 초과달성</span>
       </div>
       <div class="metric-card">
         <p class="m-label">인당 소비 시간 (AOS 신버전)</p>
+        <p style="font-size:13px; color:var(--text-faint); font-family:'DM Mono',monospace; margin-bottom:2px;">55초 →</p>
         <p class="m-val blue">79.48초</p>
         <p class="m-change info">▲ 23% 증가</p>
-        <p style="font-size:11px; color:var(--text-faint); margin-top:4px;">기준 55초</p>
-        <span class="badge badge-blue">참고지표</span>
       </div>
     </div>
+    <p style="font-size:12px; color:var(--text-faint); margin-top:6px;">※ 기준치: 25년 11월 첫째 주 ~ 26년 1월 마지막 주 (3개월) 평균</p>
+    </div>
   </div>
-
+ 
   <!-- 3. 이탈률 추이 -->
   <div class="section">
     <div class="section-header">
@@ -405,7 +409,7 @@
       </div>
       <p class="chart-note">3~10번째 이탈 소폭 증가는 부정적 신호가 아님 · 첫 스토리를 넘어 더 깊이 소비하는 유저 증가로 인한 구조적 변화</p>
     </div>
-
+ 
     <div class="chart-wrap">
       <p class="chart-title">6번째 스토리 누적 이탈률 주차별 변화 (전체 플랫폼)</p>
       <div style="position:relative; width:100%; height:220px;">
@@ -413,14 +417,14 @@
       </div>
       <p class="chart-note">수직 점선 기준 좌=배포 전(pre), 우=배포 후(post) · 배포 직후 1주는 안정화 기간으로 변화가 미미하다가 post_w2부터 본격 하락</p>
     </div>
-
+ 
     <div class="insight">
       <strong>해석</strong><br>
       · 구버전 유저는 같은 기간 이탈률 87%대 유지 — 계절성 등 외부 요인 없음<br>
       · 신버전 전환 유저에서만 이탈률 하락 → 정렬 개편의 효과로 볼 수 있음
     </div>
   </div>
-
+ 
   <!-- 4. 소비량/시간 추이 -->
   <div class="section">
     <div class="section-header">
@@ -459,7 +463,7 @@
       · AOS 개선 폭이 iOS보다 큰 것은 Android에 추천순이 먼저 적용되어 데이터 누적이 더 많기 때문
     </div>
   </div>
-
+ 
   <!-- 5. 이탈 분포 -->
   <div class="section">
     <div class="section-header">
@@ -491,7 +495,7 @@
       <p class="chart-note" style="margin-top:12px">3번째 이후 이탈 비중 소폭 상승은 1번째 이탈이 줄면서 깊이 소비하는 유저 모수가 늘어난 구조적 결과. 부정적 신호 아님.</p>
     </div>
   </div>
-
+ 
   <!-- 6. 목표 달성 현황 -->
   <div class="section">
     <div class="section-header">
@@ -503,7 +507,7 @@
         <thead>
           <tr>
             <th>지표</th>
-            <th>기준치</th>
+            <th>기준치 (25.11~26.01)</th>
             <th>목표</th>
             <th>결과 (post_w4)</th>
             <th>달성</th>
@@ -512,38 +516,37 @@
         <tbody>
           <tr>
             <td>첫 번째 스토리 이탈률</td>
-            <td class="muted">53.25%</td>
+            <td><span class="asis">53.25%</span></td>
             <td class="muted">47% 이하</td>
             <td class="val">44.7%</td>
             <td><span class="badge badge-green">초과달성</span></td>
           </tr>
           <tr>
             <td>6번째 스토리 누적 이탈률</td>
-            <td class="muted">90.85%</td>
+            <td><span class="asis">90.85%</span></td>
             <td class="muted">88% 이하</td>
             <td class="val">81.7%</td>
             <td><span class="badge badge-green">초과달성</span></td>
           </tr>
           <tr>
             <td>인당 평균 소비 수</td>
-            <td class="muted">13.06개</td>
+            <td><span class="asis">13.06개</span></td>
             <td class="muted">14개 이상</td>
             <td class="val">AOS 23.36 / iOS 14.71</td>
             <td><span class="badge badge-green">초과달성</span></td>
           </tr>
           <tr>
             <td>인당 평균 체류시간 (참고)</td>
-            <td class="muted">55초</td>
+            <td><span class="asis">55초</span></td>
             <td class="muted">Phase 1 직접 목표 아님</td>
             <td class="val">AOS 79.48초 / iOS 70.17초</td>
             <td><span class="badge badge-blue">참고지표</span></td>
           </tr>
         </tbody>
       </table>
+      <p style="font-size:12px; color:var(--text-faint); margin-top:14px;">· 기준치: 25년 11월 첫째 주 ~ 26년 1월 마지막 주 (3개월) 평균<br>· 목표치: 내부 선행 데이터 없이 가설 기반으로 설정한 1차 목표</p>
     </div>
   </div>
-
-  <!-- 참고자료 -->
   <div class="section">
     <div class="section-header">
       <span class="section-num">참고</span>
@@ -561,13 +564,13 @@
       </a>
     </div>
   </div>
-
+ 
 </div>
-
+ 
 <script>
 const weeks8 = ['pre_w4','pre_w3','pre_w2','pre_w1','post_w1','post_w2','post_w3','post_w4'];
 const postWeeks = ['post_w1','post_w2','post_w3','post_w4'];
-
+ 
 const vlinePlugin = {
   id: 'vline',
   beforeDraw(chart) {
@@ -585,7 +588,7 @@ const vlinePlugin = {
     ctx.restore();
   }
 };
-
+ 
 const base = {
   responsive: true,
   maintainAspectRatio: false,
@@ -595,7 +598,7 @@ const base = {
     y: { ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
   }
 };
-
+ 
 new Chart(document.getElementById('exitChart'), {
   type: 'line',
   data: {
@@ -610,7 +613,7 @@ new Chart(document.getElementById('exitChart'), {
   options: { ...base, scales: { ...base.scales, y: { ...base.scales.y, min: 78, max: 91, ticks: { ...base.scales.y.ticks, callback: v => v + '%' } } } },
   plugins: [vlinePlugin]
 });
-
+ 
 new Chart(document.getElementById('exitSeqChart'), {
   type: 'line',
   data: {
@@ -625,7 +628,7 @@ new Chart(document.getElementById('exitSeqChart'), {
   options: { ...base, scales: { ...base.scales, y: { ...base.scales.y, min: 40, max: 58, ticks: { ...base.scales.y.ticks, callback: v => v + '%' } } } },
   plugins: [vlinePlugin]
 });
-
+ 
 new Chart(document.getElementById('consumeChart'), {
   type: 'line',
   data: {
@@ -639,7 +642,7 @@ new Chart(document.getElementById('consumeChart'), {
   },
   options: { ...base, scales: { ...base.scales, y: { ...base.scales.y, ticks: { ...base.scales.y.ticks, callback: v => v + '개' } } } }
 });
-
+ 
 new Chart(document.getElementById('timeChart'), {
   type: 'line',
   data: {
